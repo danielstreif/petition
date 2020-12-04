@@ -6,8 +6,10 @@
     <input type="text" name="first" placeholder="First Name">
     <input type="text" name="last" placeholder="Last Name">
     <canvas id="canvas" width="250" height="50"></canvas>
-    <script src="/public/canvas.js"></script>
-    <input type="hidden" name="sig" value="true">
+    <input type="hidden" name="sig" id="sig" value="true">
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button>Submit</button>
 </form>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="/canvas.js"></script>

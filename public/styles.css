@@ -9,8 +9,16 @@ footer {
 }
 
 .errorMessage {
-    /* display: none; */
     color: red;
+}
+
+img .signature {
+    width: 250px;
+    height: 50px;
+}
+
+#canvas {
+    border: solid black 1px;
 }
 
 #signers {

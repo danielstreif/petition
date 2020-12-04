@@ -11,11 +11,11 @@ const db = require("./db");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
-app.use(
-    helmet({
-        frameguard: { action: "SAMEORIGIN" },
-    })
-);
+// app.use(
+//     helmet({
+//         frameguard: { action: "SAMEORIGIN" },
+//     })
+// );
 
 app.use(express.static("./public"));
 
@@ -41,16 +41,16 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    if (req.session.signed && req.url === "/petition") {
+    if (req.session.id && req.url === "/petition") {
         res.redirect("/thanks");
-    } else if (req.session.signed || req.url === "/petition") {
+    } else if (req.session.id || req.url === "/petition") {
         next();
     } else {
         res.redirect("/petition");
     }
 });
 
-app.get("/", (req, red) => {
+app.get("/", (req, res) => {
     res.redirect("/petition");
 });
 
@@ -64,9 +64,9 @@ app.post("/petition", (req, res) => {
     const { sig } = req.body;
 
     if (sig) {
-        req.session.signed = true;
         db.addSigner(req.body.first, req.body.last, req.body.sig)
-            .then(() => {
+            .then(({ rows }) => {
+                req.session.id = rows[0].id;
                 res.redirect("/thanks");
             })
             .catch((err) => {
@@ -84,9 +84,13 @@ app.post("/petition", (req, res) => {
 app.get("/thanks", (req, res) => {
     db.getSignerCount()
         .then(({ rows }) => {
-            res.render("thanks", {
-                title: "You signed!",
-                count: rows[0].count,
+            const sigCount = rows[0].count;
+            db.getSignature(req.session.id).then(({ rows }) => {
+                res.render("thanks", {
+                    title: "You signed!",
+                    sig: rows[0].sig,
+                    sigCount,
+                });
             });
         })
         .catch((err) => {
