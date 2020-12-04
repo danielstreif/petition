@@ -1,0 +1,11 @@
+<h1>Please sign here</h1>
+{{#if errorMessage}}
+<p class="errorMessage">Something went wrong, please try again...</p>
+{{/if}}
+<form method="post">
+    <input type="text" name="first" placeholder="First Name">
+    <input type="text" name="last" placeholder="Last Name">
+    <canvas id="canvas" width="250" height="50"></canvas>
+    <input type="hidden" name="signature" value="true">
+    <button>Submit</button>
+</form>

@@ -1,0 +1,18 @@
+* {
+    box-sizing: border-box;
+    font-family: Georgia;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+}
+
+.errorMessage {
+    /* display: none; */
+    color: red;
+}
+
+#signers {
+    font-size: larger;
+}
