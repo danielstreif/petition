@@ -6,6 +6,8 @@
     <input type="text" name="first" placeholder="First Name">
     <input type="text" name="last" placeholder="Last Name">
     <canvas id="canvas" width="250" height="50"></canvas>
-    <input type="hidden" name="signature" value="true">
+    <script src="/public/canvas.js"></script>
+    <input type="hidden" name="sig" value="true">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button>Submit</button>
 </form>

@@ -1,20 +1,23 @@
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
-let paint = false;
+context.lineCap = "roiund";
+let stroke = false;
 let startX;
 let startY;
 
 canvas.addEventListener("mousedown", (event) => {
+    event.preventDefault();
     mouseX = event.pageX;
     mouseY = event.pageY;
 
-    paint = true;
+    stroke = true;
 });
 
 canvas.addEventListener("mousemove", (event) => {
+    context.stroke();
     context.beginPath();
     context.moveTo(startX, startY);
 });
 
-canvas.addEventListener("mouseleave", (paint = false));
-canvas.addEventListener("mouseup", (paint = false));
+canvas.addEventListener("mouseleave", (stroke = false));
+canvas.addEventListener("mouseup", (stoke = false));

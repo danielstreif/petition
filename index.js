@@ -1,13 +1,30 @@
 const express = require("express");
 const app = express();
 const hb = require("express-handlebars");
-const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
+const helmet = require("helmet");
+const csurf = require("csurf");
+
+const { sessionSecret } = require("./secrets");
 const db = require("./db");
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
+app.use(
+    helmet({
+        frameguard: { action: "SAMEORIGIN" },
+    })
+);
+
 app.use(express.static("./public"));
+
+app.use(
+    cookieSession({
+        secret: sessionSecret,
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+    })
+);
 
 app.use(
     express.urlencoded({
@@ -15,16 +32,26 @@ app.use(
     })
 );
 
-app.use(cookieParser());
+app.use(csurf());
 
 app.use((req, res, next) => {
-    if (req.cookies.signed && req.url === "/petition") {
+    res.set("x-frame-options", "DENY");
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
+
+app.use((req, res, next) => {
+    if (req.session.signed && req.url === "/petition") {
         res.redirect("/thanks");
-    } else if (req.cookies.signed || req.url === "/petition") {
+    } else if (req.session.signed || req.url === "/petition") {
         next();
     } else {
         res.redirect("/petition");
     }
+});
+
+app.get("/", (req, red) => {
+    res.redirect("/petition");
 });
 
 app.get("/petition", (req, res) => {
@@ -34,11 +61,11 @@ app.get("/petition", (req, res) => {
 });
 
 app.post("/petition", (req, res) => {
-    const { signature } = req.body;
+    const { sig } = req.body;
 
-    if (signature) {
-        res.cookie("signed", true);
-        db.addSigner(req.body.first, req.body.last)
+    if (sig) {
+        req.session.signed = true;
+        db.addSigner(req.body.first, req.body.last, req.body.sig)
             .then(() => {
                 res.redirect("/thanks");
             })

@@ -9,10 +9,11 @@ module.exports.getSignerNames = () => {
     return db.query(`SELECT first, last FROM petition`);
 };
 
-module.exports.addSigner = (firstName, lastName) => {
-    const q = `INSERT INTO petition (first, last, signature)
-    VALUES ($1, $2, true)`;
-    const params = [firstName, lastName];
-
-    return db.query(q, params);
+module.exports.addSigner = (firstName, lastName, signature) => {
+    return db.query(
+        `INSERT INTO petition (first, last, signature)
+    VALUES ($1, $2, $3)
+    RETURNING id`,
+        [firstName, lastName, signature]
+    );
 };
