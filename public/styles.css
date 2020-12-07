@@ -1,26 +1,59 @@
 * {
     box-sizing: border-box;
     font-family: Georgia;
+    margin: 0;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
+body {
+    background-color: lightgray;
 }
 
-.errorMessage {
-    color: red;
+header {
+    background-color: lightcyan;
+    text-align: center;
+    padding: 10px;
+    height: 15vh;
 }
 
-img .signature {
+main {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    width: 100%;
+    height: 80vh;
+    padding: 30px 0 0 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+img.sig {
     width: 250px;
     height: 50px;
 }
 
 #canvas {
     border: solid black 1px;
+    background-color: white;
+    margin: 10px 0 10px 0;
 }
 
 #signers {
     font-size: larger;
+}
+
+.errorMessage {
+    color: red;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 5vh;
+    background-color: lightcyan;
+    padding: 10px;
 }
