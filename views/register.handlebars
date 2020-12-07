@@ -1,7 +1,7 @@
-<h3>Please register.</h3>
-{{#if errorMessage}}
-    <p class="errorMessage">Something went wrong, please try again.</p>
-{{/if}}
+<h3>Please register</h3>
+
+{{> error}}
+
 <form method="post">
     <input type="text" name="first" placeholder="First Name" required="required">
     <input type="text" name="last" placeholder="Last Name" required="required">

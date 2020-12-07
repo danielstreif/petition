@@ -4,15 +4,15 @@
     margin: 0;
 }
 
-body {
-    background-color: lightgray;
-}
-
 header {
     background-color: lightcyan;
     text-align: center;
     padding: 10px;
     height: 15vh;
+}
+
+body {
+    background-color: lightgray;
 }
 
 main {
@@ -30,9 +30,18 @@ form {
     align-items: center;
 }
 
-img.sig {
-    width: 250px;
-    height: 50px;
+input {
+    font-size: medium;
+    width: 200px;
+    height: 30px;
+    margin: 10px 0 0 0;
+}
+
+button {
+    font-size: medium;
+    width: 150px;
+    border-radius: 25px;
+    margin: 10px 0 10px 0;
 }
 
 #canvas {
@@ -43,6 +52,11 @@ img.sig {
 
 #signers {
     font-size: larger;
+}
+
+img.sig {
+    width: 250px;
+    height: 50px;
 }
 
 .errorMessage {

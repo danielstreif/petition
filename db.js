@@ -1,7 +1,6 @@
 const spicedPg = require("spiced-pg");
 const db = spicedPg("postgres:postgres:postgres@localhost:5432/signatures");
 
-
 module.exports.getSignerCount = () => {
     return db.query(`SELECT COUNT(*) FROM signatures`);
 };

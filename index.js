@@ -35,9 +35,8 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    console.log(req.session.sigId);
     if (
-        req.session.userId !== undefined &&
+        req.session.userId === undefined &&
         req.url !== "/register" &&
         req.url !== "/login"
     ) {
@@ -153,15 +152,16 @@ app.post("/login", (req, res) => {
             const userId = rows[0].id;
             compare(req.body.password, rows[0].password).then((result) => {
                 if (result) {
+                    req.session.userId = userId;
                     db.getSigId(userId)
                         .then(({ rows }) => {
                             req.session.sigId = rows[0].id;
+                            res.redirect("/petition");
                         })
                         .catch((err) => {
                             console.log("getSigId error: ", err);
+                            res.redirect("/petition");
                         });
-                    req.session.userId = userId;
-                    res.redirect("/petition");
                 } else {
                     res.render("login", {
                         errorMessage: "true",

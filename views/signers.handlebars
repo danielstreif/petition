@@ -1,11 +1,9 @@
 <h3>List of signers</h3>
 
-<ul>
+<article>
     {{#each signers}}
-    <li>{{first}} {{last}}</li>
+        <p>{{first}} {{last}}</p>
     {{/each}}
-</ul>
+</article>
 
-<a href="/logout">
-    <button>LOGOUT</button>
-</a>
+{{> logout}}

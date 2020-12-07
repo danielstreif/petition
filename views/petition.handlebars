@@ -1,7 +1,7 @@
 <h3>Please sign here</h3>
-{{#if errorMessage}}
-    <p class="errorMessage">Something went wrong, please try again.</p>
-{{/if}}
+
+{{> error}}
+
 <form method="post">
     <canvas id="canvas"  width="300px" height="100px"></canvas>
     <input type="hidden" name="sig" id="sig" value="true">
@@ -9,9 +9,7 @@
     <button>SUBMIT</button>
 </form>
 
+{{> logout}}
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="/canvas.js"></script>
-
-<a href="/logout">
-    <button>LOGOUT</button>
-</a>
