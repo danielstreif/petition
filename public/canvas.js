@@ -5,19 +5,16 @@
     const offsetX = canvas.offset().left;
     const offsetY = canvas.offset().top;
 
-    canvas.on("mousedown", (event) => {
+    canvas.on("mousedown", (e) => {
         context.beginPath();
-        context.moveTo(event.pageX - offsetX, event.pageY - offsetY);
+        context.moveTo(e.pageX - offsetX, e.pageY - offsetY);
 
-        canvas.on("mousemove", (event) => {
-            context.lineTo(event.pageX - offsetX, event.pageY - offsetY);
+        canvas.on("mousemove", (e) => {
+            context.lineTo(e.pageX - offsetX, e.pageY - offsetY);
             context.stroke();
         });
 
-        canvas.on("mouseleave", () => {
-            exit();
-        });
-        canvas.on("mouseup", () => {
+        $(document).on("mouseup", () => {
             exit();
         });
     });

@@ -2,7 +2,11 @@
 
 <article>
     {{#each signers}}
-        <p>{{first}} {{last}}</p>
+        {{#if url}}
+        <p><a href={{url}}>{{first}} {{last}}</a> {{age}} {{city}}</p>
+        {{else}}
+        <p>{{first}} {{last}} {{age}} {{city}}</p>
+        {{/if}}
     {{/each}}
 </article>
 

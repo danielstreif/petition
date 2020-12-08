@@ -10,8 +10,15 @@ module.exports.getSignature = (sigId) => {
 };
 
 module.exports.getSignerNames = () => {
-    return db.query(`SELECT users.first, users.last FROM users
-    INNER JOIN signatures ON users.id=signatures.user_id`);
+    return db.query(`SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url FROM users
+    LEFT JOIN user_profiles ON users.id = user_profiles.user_id
+    INNER JOIN signatures ON users.id = signatures.user_id`);
+};
+
+module.exports.getSignersByCity = () => {
+    return db.query(`SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url FROM users
+    LEFT JOIN users ON users.id = user_profiles.user_id
+    INNER JOIN signatures ON users.id = signatures.user_id`);
 };
 
 module.exports.addSigner = (signature, userId) => {
@@ -40,4 +47,12 @@ module.exports.getCredentials = (email) => {
 
 module.exports.getSigId = (userId) => {
     return db.query(`SELECT id FROM signatures WHERE user_id = ($1)`, [userId]);
+};
+
+module.exports.addUserProfile = (age, city, homepage, userId) => {
+    return db.query(
+        `INSERT INTO user_profiles (age, city, url, user_id)
+    VALUES ($1, $2, $3, $4)`,
+        [age, city, homepage, userId]
+    );
 };

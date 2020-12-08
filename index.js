@@ -45,6 +45,7 @@ app.use((req, res, next) => {
         req.session.userId !== undefined &&
         !req.session.sigId &&
         req.url !== "/petition" &&
+        req.url !== "/profile" &&
         req.url !== "/logout"
     ) {
         res.redirect("/petition");
@@ -63,58 +64,6 @@ app.get("/", (req, res) => {
     res.redirect("/petition");
 });
 
-app.get("/petition", (req, res) => {
-    res.render("petition");
-});
-
-app.post("/petition", (req, res) => {
-    const { sig } = req.body;
-
-    if (sig) {
-        db.addSigner(req.body.sig, req.session.userId)
-            .then(({ rows }) => {
-                req.session.sigId = rows[0].id;
-                res.redirect("/thanks");
-            })
-            .catch((err) => {
-                console.log("addSigner error: ", err);
-                res.render("petition", {
-                    errorMessage: "true",
-                });
-            });
-    } else {
-        res.redirect("/petition");
-    }
-});
-
-app.get("/thanks", (req, res) => {
-    db.getSignerCount()
-        .then(({ rows }) => {
-            const sigCount = rows[0].count;
-            db.getSignature(req.session.sigId).then(({ rows }) => {
-                res.render("thanks", {
-                    sig: rows[0].sig,
-                    sigCount,
-                });
-            });
-        })
-        .catch((err) => {
-            console.log("getSignerCount error: ", err);
-        });
-});
-
-app.get("/signers", (req, res) => {
-    db.getSignerNames()
-        .then(({ rows }) => {
-            res.render("signers", {
-                signers: rows,
-            });
-        })
-        .catch((err) => {
-            console.log("getSignerNames error: ", err);
-        });
-});
-
 app.get("/register", (req, res) => {
     res.render("register");
 });
@@ -125,7 +74,7 @@ app.post("/register", (req, res) => {
             db.addUser(req.body.first, req.body.last, req.body.email, hash)
                 .then(({ rows }) => {
                     req.session.userId = rows[0].id;
-                    res.redirect("/login");
+                    res.redirect("/profile");
                 })
                 .catch((err) => {
                     console.log("addUser error: ", err);
@@ -180,6 +129,89 @@ app.post("/login", (req, res) => {
 app.get("/logout", (req, res) => {
     req.session = null;
     res.redirect("/login");
+});
+
+app.get("/petition", (req, res) => {
+    res.render("petition");
+});
+
+app.post("/petition", (req, res) => {
+    const { sig } = req.body;
+
+    if (sig) {
+        db.addSigner(req.body.sig, req.session.userId)
+            .then(({ rows }) => {
+                req.session.sigId = rows[0].id;
+                res.redirect("/thanks");
+            })
+            .catch((err) => {
+                console.log("addSigner error: ", err);
+                res.render("petition", {
+                    errorMessage: "true",
+                });
+            });
+    } else {
+        res.redirect("/petition");
+    }
+});
+
+app.get("/thanks", (req, res) => {
+    db.getSignerCount()
+        .then(({ rows }) => {
+            const sigCount = rows[0].count;
+            db.getSignature(req.session.sigId).then(({ rows }) => {
+                res.render("thanks", {
+                    sig: rows[0].sig,
+                    sigCount,
+                });
+            });
+        })
+        .catch((err) => {
+            console.log("getSignerCount error: ", err);
+        });
+});
+
+app.get("/signers", (req, res) => {
+    db.getSignerNames()
+        .then(({ rows }) => {
+            res.render("signers", {
+                signers: rows,
+            });
+        })
+        .catch((err) => {
+            console.log("getSignerNames error: ", err);
+        });
+});
+
+app.get("/profile", (req, res) => {
+    res.render("profile");
+});
+
+app.post("/profile", (req, res) => {
+    if (
+        !req.body.homepage.startsWith("http") ||
+        !req.body.homepage.startsWith("https")
+    ) {
+        req.body.homepage = null;
+    }
+    if (!req.body.age) {
+        req.body.age = null;
+    }
+    db.addUserProfile(
+        req.body.age,
+        req.body.city,
+        req.body.homepage,
+        req.session.userId
+    )
+        .then(() => {
+            res.redirect("/petition");
+        })
+        .catch((err) => {
+            console.log("addUserProfile error: ", err);
+            res.render("profile", {
+                errorMessage: "true",
+            });
+        });
 });
 
 app.get("*", (req, res) => {
