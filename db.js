@@ -20,7 +20,7 @@ module.exports.getSignersByCity = (city) => {
         `SELECT users.first, users.last, user_profiles.age, user_profiles.url FROM users
     LEFT JOIN user_profiles ON users.id = user_profiles.user_id
     INNER JOIN signatures ON users.id = signatures.user_id
-    WHERE LOWER(city) = LOWER($1)`,
+    WHERE TRIM(LOWER(city)) = LOWER($1)`,
         [city]
     );
 };
@@ -53,10 +53,10 @@ module.exports.getSigId = (userId) => {
     return db.query(`SELECT id FROM signatures WHERE user_id = ($1)`, [userId]);
 };
 
-module.exports.addUserProfile = (age, city, homepage, userId) => {
+module.exports.addUserProfile = (paramArr) => {
     return db.query(
         `INSERT INTO user_profiles (age, city, url, user_id)
     VALUES ($1, $2, $3, $4)`,
-        [age, city, homepage, userId]
+        paramArr
     );
 };

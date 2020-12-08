@@ -69,9 +69,10 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    hash(req.body.password)
+    const { first, last, email, password } = req.body;
+    hash(password)
         .then((hash) => {
-            db.addUser(req.body.first, req.body.last, req.body.email, hash)
+            db.addUser(first, last, email, hash)
                 .then(({ rows }) => {
                     req.session.userId = rows[0].id;
                     res.redirect("/profile");
@@ -96,10 +97,11 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-    db.getCredentials(req.body.email)
+    const { email, password } = req.body;
+    db.getCredentials(email)
         .then(({ rows }) => {
             const userId = rows[0].id;
-            compare(req.body.password, rows[0].password).then((result) => {
+            compare(password, rows[0].password).then((result) => {
                 if (result) {
                     req.session.userId = userId;
                     db.getSigId(userId)
@@ -137,9 +139,8 @@ app.get("/petition", (req, res) => {
 
 app.post("/petition", (req, res) => {
     const { sig } = req.body;
-
     if (sig) {
-        db.addSigner(req.body.sig, req.session.userId)
+        db.addSigner(sig, req.session.userId)
             .then(({ rows }) => {
                 req.session.sigId = rows[0].id;
                 res.redirect("/thanks");
@@ -188,21 +189,17 @@ app.get("/profile", (req, res) => {
 });
 
 app.post("/profile", (req, res) => {
-    if (
-        !req.body.homepage.startsWith("http") ||
-        !req.body.homepage.startsWith("https")
-    ) {
-        req.body.homepage = null;
+    let { age, city, homepage } = req.body;
+    if (!homepage.startsWith("http") || !homepage.startsWith("https")) {
+        homepage = null;
     }
-    if (!req.body.age) {
-        req.body.age = null;
-    }
-    db.addUserProfile(
-        req.body.age,
-        req.body.city,
-        req.body.homepage,
-        req.session.userId
-    )
+    const params = [
+        age || null,
+        city || null,
+        homepage || null,
+        req.session.userId,
+    ];
+    db.addUserProfile(params)
         .then(() => {
             res.redirect("/petition");
         })
@@ -216,7 +213,7 @@ app.post("/profile", (req, res) => {
 
 app.get("/petition/signers/*", (req, res) => {
     const cityName = req.url.replace("/petition/signers/", "");
-    db.getSignersByCity(cityName)
+    db.getSignersByCity(cityName.replace("%20", " "))
         .then(({ rows }) => {
             res.render("signers", {
                 signers: rows,
