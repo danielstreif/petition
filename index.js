@@ -214,6 +214,20 @@ app.post("/profile", (req, res) => {
         });
 });
 
+app.get("/petition/signers/*", (req, res) => {
+    const cityName = req.url.replace("/petition/signers/", "");
+    db.getSignersByCity(cityName)
+        .then(({ rows }) => {
+            res.render("signers", {
+                signers: rows,
+            });
+        })
+        .catch((err) => {
+            console.log("getSignersByCity error: ", err);
+            res.redirect("/signers");
+        });
+});
+
 app.get("*", (req, res) => {
     res.redirect("/");
 });

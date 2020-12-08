@@ -2,11 +2,17 @@
 
 <article>
     {{#each signers}}
+        <p>
         {{#if url}}
-        <p><a href={{url}}>{{first}} {{last}}</a> {{age}} {{city}}</p>
+            <a href={{url}}>{{first}} {{last}}</a>
         {{else}}
-        <p>{{first}} {{last}} {{age}} {{city}}</p>
+            {{first}} {{last}}
         {{/if}}
+        {{age}} 
+        {{#if city}}
+            <a href="/petition/signers/{{city}}">{{city}}</a>
+        {{/if}}
+        </p>
     {{/each}}
 </article>
 
