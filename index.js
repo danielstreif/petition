@@ -3,10 +3,13 @@ const app = express();
 const hb = require("express-handlebars");
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
-
-const { sessionSecret, maxAge } = require("./secrets");
 const db = require("./db");
 const { hash, compare } = require("./bc");
+
+process.env.NODE_ENV === "production"
+    ? (secrets = process.env)
+    : (secrets = require("./secrets"));
+const { sessionSecret, maxAge } = secrets;
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
@@ -15,8 +18,8 @@ app.use(express.static("./public"));
 
 app.use(
     cookieSession({
-        secret: process.env.SESSION_SECRET || sessionSecret,
-        maxAge: process.env.MAX_AGE || maxAge,
+        secret: sessionSecret,
+        maxAge: maxAge,
     })
 );
 
