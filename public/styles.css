@@ -60,6 +60,10 @@ img.sig {
     color: red;
 }
 
+.successMessage {
+    color: green;
+}
+
 footer {
     position: absolute;
     bottom: 0;

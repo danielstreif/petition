@@ -1,17 +1,24 @@
 const spicedPg = require("spiced-pg");
-const db = spicedPg(process.env.DATABASE_URL || "postgres:postgres:postgres@localhost:5432/petition");
+const db = spicedPg(
+    process.env.DATABASE_URL ||
+        "postgres:postgres:postgres@localhost:5432/petition"
+);
 
 module.exports.getSignerCount = () => {
     return db.query(`SELECT COUNT(*) FROM signatures`);
 };
 
-module.exports.getSignature = (sigId) => {
+module.exports.getSig = (sigId) => {
     return db.query(
         `SELECT signatures.sig, users.first FROM signatures
     JOIN users ON users.id = signatures.user_id
     WHERE signatures.id = ($1)`,
         [sigId]
     );
+};
+
+module.exports.deleteSig = (sigId) => {
+    return db.query(`DELETE FROM signatures WHERE id = ($1)`, [sigId]);
 };
 
 module.exports.getSignerNames = () => {
@@ -63,5 +70,55 @@ module.exports.addUserProfile = (paramArr) => {
         `INSERT INTO user_profiles (age, city, url, user_id)
     VALUES ($1, $2, $3, $4)`,
         paramArr
+    );
+};
+
+module.exports.getProfile = (userId) => {
+    return db.query(
+        `SELECT users.first, users.last, users.email, user_profiles.age, user_profiles.city, user_profiles.url FROM users
+    LEFT JOIN user_profiles ON users.id = user_profiles.user_id
+    WHERE users.id = $1`,
+        [userId]
+    );
+};
+
+module.exports.upsertProfile = (paramArr) => {
+    return db.query(
+        `INSERT INTO user_profiles (user_id, age, city, url)
+VALUES ($1, $2, $3, $4)
+ON CONFLICT (user_id)
+DO UPDATE SET age = $2, city = $3, url = $4`,
+        paramArr
+    );
+};
+
+module.exports.updateCredentials = (userId, first, last, email) => {
+    return db.query(
+        `UPDATE users
+        SET first = $2,
+            last = $3,
+            email = $4
+        WHERE id = $1`,
+        [userId, first, last, email]
+    );
+};
+
+module.exports.updateCredentialsPW = (userId, first, last, email, password) => {
+    return db.query(
+        `UPDATE users
+        SET first = $2,
+            last = $3,
+            email = $4,
+            password = $5
+        WHERE id = $1`,
+        [userId, first, last, email, password]
+    );
+};
+
+module.exports.deleteUser = (userId) => {
+    return db.query(
+        `DELETE FROM users 
+    WHERE id = $1`,
+        [userId]
     );
 };

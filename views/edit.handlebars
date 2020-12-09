@@ -1,15 +1,28 @@
 <h3>Here you can update your profile</h3>
 
 {{> error}}
+{{> success}}
 
 <form method="post">
-    <input type="text" name="first">
-    <input type="text" name="last">
-    <input type="email" name="email">
-    <input type="password" name="password">
-    <input type="number" name="age">
-    <input type="text" name="city">
-    <input type="url" name="homepage">
+    {{#userInfo}}
+    <input type="text" name="first", placeholder="First Name", value={{first}}>
+    <input type="text" name="last", placeholder="Last Name", value={{last}}>
+    <input type="email" name="email", placeholder="Email", value={{email}}>
+    <input type="password" name="password" placeholder="New Password">
+    <input type="number" name="age", placeholder="Age", value={{age}}>
+    <input type="text" name="city", placeholder="City", value={{city}}>
+    <input type="url" name="homepage", placeholder="Homepage", value={{url}}>
+    {{/userInfo}}
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button>UPDATE</button>
 </form>
+
+<form method="post">
+    <input type="hidden" name="deleteAcc" value="true">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button>DELETE ACCOUNT</button>
+</form>
+
+{{> logout}}
+
+<a href="/petition"><button>BACK</button></a>

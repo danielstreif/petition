@@ -38,24 +38,26 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+    const url = req.url;
     if (
         req.session.userId === undefined &&
-        req.url !== "/register" &&
-        req.url !== "/login"
+        url !== "/register" &&
+        url !== "/login"
     ) {
         res.redirect("/register");
     } else if (
         req.session.userId !== undefined &&
         !req.session.sigId &&
-        req.url !== "/petition" &&
-        req.url !== "/profile" &&
-        req.url !== "/logout"
+        url !== "/petition" &&
+        url !== "/profile" &&
+        url !== "/logout" &&
+        url !== "/edit"
     ) {
         res.redirect("/petition");
     } else if (
         req.session.userId !== undefined &&
         req.session.sigId &&
-        req.url === "/petition"
+        url === "/petition"
     ) {
         res.redirect("/thanks");
     } else {
@@ -155,7 +157,9 @@ app.post("/petition", (req, res) => {
                 });
             });
     } else {
-        res.redirect("/petition");
+        res.render("petition", {
+            errorMessage: "true",
+        });
     }
 });
 
@@ -163,7 +167,7 @@ app.get("/thanks", (req, res) => {
     db.getSignerCount()
         .then(({ rows }) => {
             const sigCount = rows[0].count;
-            db.getSignature(req.session.sigId).then(({ rows }) => {
+            db.getSig(req.session.sigId).then(({ rows }) => {
                 res.render("thanks", {
                     sig: rows[0].sig,
                     name: rows[0].first,
@@ -176,6 +180,17 @@ app.get("/thanks", (req, res) => {
         });
 });
 
+app.post("/thanks", (req, res) => {
+    db.deleteSig(req.session.sigId)
+        .then(() => {
+            req.session.sigId = null;
+            res.redirect("/petition");
+        })
+        .catch((err) => {
+            console.log("deleteSig error: ", err);
+        });
+});
+
 app.get("/signers", (req, res) => {
     db.getSignerNames()
         .then(({ rows }) => {
@@ -185,6 +200,21 @@ app.get("/signers", (req, res) => {
         })
         .catch((err) => {
             console.log("getSignerNames error: ", err);
+        });
+});
+
+app.get("/petition/signers/*", (req, res) => {
+    const cityName = req.url.replace("/petition/signers/", "");
+    db.getSignersByCity(cityName.replace("%20", " "))
+        .then(({ rows }) => {
+            res.render("signers", {
+                signers: rows,
+                city: "true",
+            });
+        })
+        .catch((err) => {
+            console.log("getSignersByCity error: ", err);
+            res.redirect("/signers");
         });
 });
 
@@ -215,18 +245,78 @@ app.post("/profile", (req, res) => {
         });
 });
 
-app.get("/petition/signers/*", (req, res) => {
-    const cityName = req.url.replace("/petition/signers/", "");
-    db.getSignersByCity(cityName.replace("%20", " "))
+app.get("/edit", (req, res) => {
+    db.getProfile(req.session.userId)
         .then(({ rows }) => {
-            res.render("signers", {
-                signers: rows,
+            res.render("edit", {
+                userInfo: rows,
             });
         })
         .catch((err) => {
-            console.log("getSignersByCity error: ", err);
-            res.redirect("/signers");
+            console.log("getProfile error: ", err);
         });
+});
+
+app.post("/edit", (req, res) => {
+    const userId = req.session.userId;
+    const {
+        first,
+        last,
+        email,
+        password,
+        age,
+        city,
+        homepage,
+        deleteAcc,
+    } = req.body;
+    if (deleteAcc) {
+        db.deleteUser(userId)
+            .then(() => {
+                req.session = null;
+                res.redirect("/register");
+            })
+            .catch((err) => {
+                console.log("deleteUser error: ", err);
+            });
+    } else if (password) {
+        hash(password).then((hash) => {
+            db.updateCredentialsPW(userId, first, last, email, hash).then(
+                () => {
+                    const params = [
+                        userId,
+                        age || null,
+                        city || null,
+                        homepage || null,
+                    ];
+                    db.upsertProfile(params)
+                        .then(() => {
+                            res.redirect("/edit");
+                        })
+                        .catch((err) => {
+                            console.log("updateProfile error: ", err);
+                            res.redirect("/edit");
+                        });
+                }
+            );
+        });
+    } else {
+        db.updateCredentials(userId, first, last, email).then(() => {
+            const params = [
+                userId,
+                age || null,
+                city || null,
+                homepage || null,
+            ];
+            db.upsertProfile(params)
+                .then(() => {
+                    res.redirect("/edit");
+                })
+                .catch((err) => {
+                    console.log("updateProfile error: ", err);
+                    res.redirect("/edit");
+                });
+        });
+    }
 });
 
 app.get("*", (req, res) => {

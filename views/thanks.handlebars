@@ -2,8 +2,16 @@
 
 <img class="sig" src={{sig}} alt="signature">
 
+{{> error}}
+
 <a href="/signers">
     <button id="signers">See all {{sigCount}} signers!</button>
 </a>
 
 {{> logout}}
+{{> edit}}
+
+<form method="post">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button>DELETE SIGNATURE</button>
+</form>
