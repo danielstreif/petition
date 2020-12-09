@@ -1,25 +1,30 @@
 const spicedPg = require("spiced-pg");
-const db = spicedPg("postgres:postgres:postgres@localhost:5432/signatures");
+const db = spicedPg(process.env.DATABASE_URL || "postgres:postgres:postgres@localhost:5432/petition");
 
 module.exports.getSignerCount = () => {
     return db.query(`SELECT COUNT(*) FROM signatures`);
 };
 
 module.exports.getSignature = (sigId) => {
-    return db.query(`SELECT sig FROM signatures WHERE id = ($1)`, [sigId]);
+    return db.query(
+        `SELECT signatures.sig, users.first FROM signatures
+    JOIN users ON users.id = signatures.user_id
+    WHERE signatures.id = ($1)`,
+        [sigId]
+    );
 };
 
 module.exports.getSignerNames = () => {
     return db.query(`SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url FROM users
     LEFT JOIN user_profiles ON users.id = user_profiles.user_id
-    INNER JOIN signatures ON users.id = signatures.user_id`);
+    JOIN signatures ON users.id = signatures.user_id`);
 };
 
 module.exports.getSignersByCity = (city) => {
     return db.query(
         `SELECT users.first, users.last, user_profiles.age, user_profiles.url FROM users
     LEFT JOIN user_profiles ON users.id = user_profiles.user_id
-    INNER JOIN signatures ON users.id = signatures.user_id
+    JOIN signatures ON users.id = signatures.user_id
     WHERE TRIM(LOWER(city)) = LOWER($1)`,
         [city]
     );

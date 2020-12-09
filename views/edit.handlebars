@@ -1,0 +1,15 @@
+<h3>Here you can update your profile</h3>
+
+{{> error}}
+
+<form method="post">
+    <input type="text" name="first">
+    <input type="text" name="last">
+    <input type="email" name="email">
+    <input type="password" name="password">
+    <input type="number" name="age">
+    <input type="text" name="city">
+    <input type="url" name="homepage">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button>UPDATE</button>
+</form>

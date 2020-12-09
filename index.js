@@ -4,7 +4,7 @@ const hb = require("express-handlebars");
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
 
-const { sessionSecret } = require("./secrets");
+const { sessionSecret, maxAge } = require("./secrets");
 const db = require("./db");
 const { hash, compare } = require("./bc");
 
@@ -16,7 +16,7 @@ app.use(express.static("./public"));
 app.use(
     cookieSession({
         secret: sessionSecret,
-        maxAge: 1000 * 60 * 60 * 24 * 14,
+        maxAge: maxAge,
     })
 );
 
@@ -163,6 +163,7 @@ app.get("/thanks", (req, res) => {
             db.getSignature(req.session.sigId).then(({ rows }) => {
                 res.render("thanks", {
                     sig: rows[0].sig,
+                    name: rows[0].first,
                     sigCount,
                 });
             });
@@ -229,4 +230,4 @@ app.get("*", (req, res) => {
     res.redirect("/");
 });
 
-app.listen(8080, () => console.log("Server running on 8080"));
+app.listen(process.env.PORT || 8080, () => console.log("Server listening"));

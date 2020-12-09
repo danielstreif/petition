@@ -25,4 +25,3 @@ CREATE TABLE user_profiles(
    url VARCHAR(255),
    user_id INTEGER NOT NULL UNIQUE REFERENCES users(id)
 );
- 
