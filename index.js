@@ -15,8 +15,8 @@ app.use(express.static("./public"));
 
 app.use(
     cookieSession({
-        secret: sessionSecret,
-        maxAge: maxAge,
+        secret: process.env.SESSION_SECRET || sessionSecret,
+        maxAge: process.env.MAX_AGE || maxAge,
     })
 );
 
