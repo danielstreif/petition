@@ -5,7 +5,7 @@ const db = require("../db");
 const router = express.Router();
 
 router.get("/profile", (req, res) => {
-    res.render("profile");
+    res.render("profile", { errorMessage: req.query.error });
 });
 
 router.post("/profile", (req, res) => {
@@ -24,10 +24,7 @@ router.post("/profile", (req, res) => {
             res.redirect("/petition");
         })
         .catch((err) => {
-            console.log("addUserProfile error: ", err);
-            res.render("profile", {
-                errorMessage: "true",
-            });
+            res.redirect("/profile/?error=true");
         });
 });
 
@@ -36,25 +33,19 @@ router.get("/profile/edit", (req, res) => {
         .then(({ rows }) => {
             res.render("edit", {
                 userInfo: rows,
+                errorMessage: req.query.error,
+                success: req.query.success,
             });
         })
         .catch((err) => {
-            console.log("getProfile error: ", err);
+            res.redirect("/profile/?error=true");
         });
 });
 
 router.post("/profile/edit", (req, res) => {
     const userId = req.session.userId;
-    const {
-        first,
-        last,
-        email,
-        password,
-        age,
-        city,
-        homepage,
-        deleteAcc,
-    } = req.body;
+    const { first, last, email, password, age, city, deleteAcc } = req.body;
+    let { homepage } = req.body;
     if (deleteAcc) {
         db.deleteUser(userId)
             .then(() => {
@@ -62,46 +53,58 @@ router.post("/profile/edit", (req, res) => {
                 res.redirect("/register");
             })
             .catch((err) => {
-                console.log("deleteUser error: ", err);
+                res.redirect("/profile/edit/?error=true");
             });
     } else if (password) {
-        hash(password).then((hash) => {
-            db.updateCredentialsPW(userId, first, last, email, hash).then(
-                () => {
-                    const params = [
-                        userId,
-                        age || null,
-                        city || null,
-                        homepage || null,
-                    ];
-                    db.upsertProfile(params)
-                        .then(() => {
-                            res.redirect("/profile/edit");
-                        })
-                        .catch((err) => {
-                            console.log("updateProfile error: ", err);
-                            res.redirect("/profile/edit");
-                        });
+        hash(password)
+            .then((hash) => {
+                db.updateCredentialsPW(userId, first, last, email, hash);
+            })
+            .then(() => {
+                if (
+                    !homepage.startsWith("http") ||
+                    !homepage.startsWith("https")
+                ) {
+                    homepage = null;
                 }
-            );
-        });
+                const params = [
+                    userId,
+                    age || null,
+                    city || null,
+                    homepage || null,
+                ];
+                db.upsertProfile(params);
+            })
+            .then(() => {
+                res.redirect("/profile/edit/?success=true");
+            })
+            .catch((err) => {
+                res.redirect("/profile/edit/?error=true");
+            });
     } else {
-        db.updateCredentials(userId, first, last, email).then(() => {
-            const params = [
-                userId,
-                age || null,
-                city || null,
-                homepage || null,
-            ];
-            db.upsertProfile(params)
-                .then(() => {
-                    res.redirect("/profile/edit");
-                })
-                .catch((err) => {
-                    console.log("updateProfile error: ", err);
-                    res.redirect("/profile/edit");
-                });
-        });
+        db.updateCredentials(userId, first, last, email)
+            .then(() => {
+                if (
+                    !homepage.startsWith("http") ||
+                    !homepage.startsWith("https")
+                ) {
+                    homepage = null;
+                }
+                const params = [
+                    userId,
+                    age || null,
+                    city || null,
+                    homepage || null,
+                ];
+                return db.upsertProfile(params);
+            })
+            .then(() => {
+                res.redirect("/profile/edit/?success=true");
+            })
+            .catch((err) => {
+                console.log(err);
+                res.redirect("/profile/edit/?error=true");
+            });
     }
 });
 

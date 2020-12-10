@@ -9,6 +9,7 @@ router.get("/signers", requireSignedPetition, (req, res) => {
         .then(({ rows }) => {
             res.render("signers", {
                 signers: rows,
+                errorMessage: req.query.error,
             });
         })
         .catch((err) => {
@@ -26,8 +27,7 @@ router.get("/signers/*", requireSignedPetition, (req, res) => {
             });
         })
         .catch((err) => {
-            console.log("getSignersByCity error: ", err);
-            res.redirect("/signers");
+            res.redirect("/signers/?error=true");
         });
 });
 

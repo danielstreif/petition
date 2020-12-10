@@ -5,7 +5,7 @@ const { requireUnsignedPetition } = require("../middleware");
 const router = express.Router();
 
 router.get("/petition", requireUnsignedPetition, (req, res) => {
-    res.render("petition");
+    res.render("petition", { errorMessage: req.query.error });
 });
 
 router.post("/petition", requireUnsignedPetition, (req, res) => {
@@ -15,10 +15,7 @@ router.post("/petition", requireUnsignedPetition, (req, res) => {
             res.redirect("/thanks");
         })
         .catch((err) => {
-            console.log("addSigner error: ", err);
-            res.render("petition", {
-                errorMessage: "true",
-            });
+            res.redirect("/petition/?error=true");
         });
 });
 

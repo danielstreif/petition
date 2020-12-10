@@ -110,6 +110,6 @@ test("POST /petition sends error when logged in and signature not accepted", () 
     return supertest(app)
         .post("/petition")
         .then((res) => {
-            expect(res.text).toContain("errorMessage");
+            expect(res.header.location).toContain("error");
         });
 });

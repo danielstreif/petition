@@ -6,30 +6,23 @@ const { requireLoggedOutUser } = require("../middleware");
 const router = express.Router();
 
 router.get("/register", requireLoggedOutUser, (req, res) => {
-    res.render("register");
+    res.render("register", {
+        errorMessage: req.query.error,
+    });
 });
 
 router.post("/register", requireLoggedOutUser, (req, res) => {
     const { first, last, email, password } = req.body;
     hash(password)
         .then((hash) => {
-            db.addUser(first, last, email, hash)
-                .then(({ rows }) => {
-                    req.session.userId = rows[0].id;
-                    res.redirect("/profile");
-                })
-                .catch((err) => {
-                    console.log("addUser error: ", err);
-                    res.render("register", {
-                        errorMessage: "true",
-                    });
-                });
+            return db.addUser(first, last, email, hash);
+        })
+        .then(({ rows }) => {
+            req.session.userId = rows[0].id;
+            res.redirect("/profile");
         })
         .catch((err) => {
-            console.log("hash error: ", err);
-            res.render("register", {
-                errorMessage: "true",
-            });
+            res.redirect("/register/?error=true");
         });
 });
 

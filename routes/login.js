@@ -6,38 +6,34 @@ const { requireLoggedOutUser } = require("../middleware");
 const router = express.Router();
 
 router.get("/login", requireLoggedOutUser, (req, res) => {
-    res.render("login");
+    res.render("login", { errorMessage: req.query.error });
 });
 
 router.post("/login", requireLoggedOutUser, (req, res) => {
     const { email, password } = req.body;
+    let userId;
     db.getCredentials(email)
         .then(({ rows }) => {
-            const userId = rows[0].id;
-            compare(password, rows[0].password).then((result) => {
-                if (result) {
-                    req.session.userId = userId;
-                    db.getSigId(userId)
-                        .then(({ rows }) => {
-                            req.session.sigId = rows[0].id;
-                            res.redirect("/petition");
-                        })
-                        .catch((err) => {
-                            console.log("getSigId error: ", err);
-                            res.redirect("/petition");
-                        });
-                } else {
-                    res.render("login", {
-                        errorMessage: "true",
+            userId = rows[0].id;
+            return compare(password, rows[0].password);
+        })
+        .then((result) => {
+            if (result) {
+                req.session.userId = userId;
+                db.getSigId(userId)
+                    .then(({ rows }) => {
+                        req.session.sigId = rows[0].id;
+                        res.redirect("/thanks");
+                    })
+                    .catch((err) => {
+                        res.redirect("/petition");
                     });
-                }
-            });
+            } else {
+                res.redirect("/login/?error=true");
+            }
         })
         .catch((err) => {
-            console.log("getCredentials error: ", err);
-            res.render("login", {
-                errorMessage: "true",
-            });
+            res.redirect("/login/?error=true");
         });
 });
 
