@@ -1,8 +1,6 @@
 const express = require("express");
 const db = require("../db");
-const {
-    requireUnsignedPetition,
-} = require("../middleware");
+const { requireUnsignedPetition } = require("../middleware");
 
 const router = express.Router();
 

@@ -6,6 +6,8 @@ const csurf = require("csurf");
 const { csrfSetup, requireLoggedInUser } = require("./middleware");
 const routes = require("./routes");
 
+exports.app = app;
+
 process.env.NODE_ENV === "production"
     ? (secrets = process.env)
     : (secrets = require("./secrets"));
@@ -37,12 +39,10 @@ app.use(requireLoggedInUser);
 
 app.use(routes);
 
-app.get("/", requireLoggedInUser, (req, res) => {
+app.get("*", (req, res) => {
     res.redirect("/petition");
 });
 
-app.get("*", (req, res) => {
-    res.redirect("/");
-});
-
-app.listen(process.env.PORT || 8080, () => console.log("Server listening"));
+if (require.main === module) {
+    app.listen(process.env.PORT || 8080, () => console.log("Server listening"));
+}
