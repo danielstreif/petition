@@ -91,7 +91,7 @@ test("POST /petition sends 200 and redirects to /thanks when logged in and signa
     cookieSession.mockSessionOnce({
         userId: 123,
     });
-    db.addSigner.mockImplementation()
+    db.addSigner.mockImplementationOnce(() => {Promise.resolve()});
     db.addSigner.mockResolvedValue({
         rows: { id: 123 },
     });
@@ -107,11 +107,12 @@ test("POST /petition sends error when logged in and signature not accepted", () 
     cookieSession.mockSessionOnce({
         userId: 123,
     });
-    db.addSigner.mockResolvedValue(err);
+    db.addSigner.mockImplementationOnce(() => {Promise.resolve(Error);});
+    db.addSigner.mockResolvedValue(Error);
     return supertest(app)
         .post("/petition")
         .then((res) => {
             expect(res.statusCode).toBe(404);
-            expect(res.body).toContain(err);
+            expect(res.body).toContain(Error);
         });
 });

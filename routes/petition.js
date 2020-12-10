@@ -9,24 +9,17 @@ router.get("/petition", requireUnsignedPetition, (req, res) => {
 });
 
 router.post("/petition", requireUnsignedPetition, (req, res) => {
-    const { sig } = req.body;
-    if (sig) {
-        db.addSigner(sig, req.session.userId)
-            .then(({ rows }) => {
-                req.session.sigId = rows[0].id;
-                res.redirect("/thanks");
-            })
-            .catch((err) => {
-                console.log("addSigner error: ", err);
-                res.render("petition", {
-                    errorMessage: "true",
-                });
+    db.addSigner(req.body.sig, req.session.userId)
+        .then(({ rows }) => {
+            req.session.sigId = rows[0].id;
+            res.redirect("/thanks");
+        })
+        .catch((err) => {
+            console.log("addSigner error: ", err);
+            res.render("petition", {
+                errorMessage: "true",
             });
-    } else {
-        res.render("petition", {
-            errorMessage: "true",
         });
-    }
 });
 
 module.exports = router;
