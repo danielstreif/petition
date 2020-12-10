@@ -5,6 +5,13 @@ const cookieSession = require("cookie-session");
 const csurf = require("csurf");
 const db = require("./db");
 const { hash, compare } = require("./bc");
+const {
+    csrfSetup,
+    requireLoggedInUser,
+    requireLoggedOutUser,
+    requireSignedPetition,
+    requireUnsignedPetition,
+} = require("./middleware");
 
 process.env.NODE_ENV === "production"
     ? (secrets = process.env)
@@ -31,49 +38,19 @@ app.use(
 
 app.use(csurf());
 
-app.use((req, res, next) => {
-    res.set("x-frame-options", "DENY");
-    res.locals.csrfToken = req.csrfToken();
-    next();
-});
+app.use(csrfSetup);
 
-app.use((req, res, next) => {
-    const url = req.url;
-    if (
-        req.session.userId === undefined &&
-        url !== "/register" &&
-        url !== "/login"
-    ) {
-        res.redirect("/register");
-    } else if (
-        req.session.userId !== undefined &&
-        !req.session.sigId &&
-        url !== "/petition" &&
-        url !== "/profile" &&
-        url !== "/logout" &&
-        url !== "/edit"
-    ) {
-        res.redirect("/petition");
-    } else if (
-        req.session.userId !== undefined &&
-        req.session.sigId &&
-        url === "/petition"
-    ) {
-        res.redirect("/thanks");
-    } else {
-        next();
-    }
-});
+app.use(requireLoggedInUser);
 
-app.get("/", (req, res) => {
+app.get("/", requireLoggedInUser, (req, res) => {
     res.redirect("/petition");
 });
 
-app.get("/register", (req, res) => {
+app.get("/register", requireLoggedOutUser, (req, res) => {
     res.render("register");
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", requireLoggedOutUser, (req, res) => {
     const { first, last, email, password } = req.body;
     hash(password)
         .then((hash) => {
@@ -97,11 +74,11 @@ app.post("/register", (req, res) => {
         });
 });
 
-app.get("/login", (req, res) => {
+app.get("/login", requireLoggedOutUser, (req, res) => {
     res.render("login");
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", requireLoggedOutUser, (req, res) => {
     const { email, password } = req.body;
     db.getCredentials(email)
         .then(({ rows }) => {
@@ -133,16 +110,11 @@ app.post("/login", (req, res) => {
         });
 });
 
-app.get("/logout", (req, res) => {
-    req.session = null;
-    res.redirect("/login");
-});
-
-app.get("/petition", (req, res) => {
+app.get("/petition", requireUnsignedPetition, (req, res) => {
     res.render("petition");
 });
 
-app.post("/petition", (req, res) => {
+app.post("/petition", requireUnsignedPetition, (req, res) => {
     const { sig } = req.body;
     if (sig) {
         db.addSigner(sig, req.session.userId)
@@ -163,7 +135,7 @@ app.post("/petition", (req, res) => {
     }
 });
 
-app.get("/thanks", (req, res) => {
+app.get("/thanks", requireSignedPetition, (req, res) => {
     db.getSignerCount()
         .then(({ rows }) => {
             const sigCount = rows[0].count;
@@ -180,7 +152,7 @@ app.get("/thanks", (req, res) => {
         });
 });
 
-app.post("/thanks", (req, res) => {
+app.post("/thanks", requireSignedPetition, (req, res) => {
     db.deleteSig(req.session.sigId)
         .then(() => {
             req.session.sigId = null;
@@ -191,7 +163,7 @@ app.post("/thanks", (req, res) => {
         });
 });
 
-app.get("/signers", (req, res) => {
+app.get("/signers", requireSignedPetition, (req, res) => {
     db.getSignerNames()
         .then(({ rows }) => {
             res.render("signers", {
@@ -203,7 +175,7 @@ app.get("/signers", (req, res) => {
         });
 });
 
-app.get("/petition/signers/*", (req, res) => {
+app.get("/petition/signers/*", requireSignedPetition, (req, res) => {
     const cityName = req.url.replace("/petition/signers/", "");
     db.getSignersByCity(cityName.replace("%20", " "))
         .then(({ rows }) => {
@@ -245,7 +217,7 @@ app.post("/profile", (req, res) => {
         });
 });
 
-app.get("/edit", (req, res) => {
+app.get("/profile/edit", (req, res) => {
     db.getProfile(req.session.userId)
         .then(({ rows }) => {
             res.render("edit", {
@@ -257,7 +229,7 @@ app.get("/edit", (req, res) => {
         });
 });
 
-app.post("/edit", (req, res) => {
+app.post("/profile/edit", (req, res) => {
     const userId = req.session.userId;
     const {
         first,
@@ -290,11 +262,11 @@ app.post("/edit", (req, res) => {
                     ];
                     db.upsertProfile(params)
                         .then(() => {
-                            res.redirect("/edit");
+                            res.redirect("/profile/edit");
                         })
                         .catch((err) => {
                             console.log("updateProfile error: ", err);
-                            res.redirect("/edit");
+                            res.redirect("/profile/edit");
                         });
                 }
             );
@@ -309,14 +281,19 @@ app.post("/edit", (req, res) => {
             ];
             db.upsertProfile(params)
                 .then(() => {
-                    res.redirect("/edit");
+                    res.redirect("/profile/edit");
                 })
                 .catch((err) => {
                     console.log("updateProfile error: ", err);
-                    res.redirect("/edit");
+                    res.redirect("/profile/edit");
                 });
         });
     }
+});
+
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.redirect("/login");
 });
 
 app.get("*", (req, res) => {
