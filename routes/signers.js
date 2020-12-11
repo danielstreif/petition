@@ -9,7 +9,7 @@ router.get("/signers", requireSignedPetition, (req, res) => {
         .then(({ rows }) => {
             res.render("signers", {
                 signers: rows,
-                errorMessage: req.query.error,
+                err: req.query.error,
             });
         })
         .catch((err) => {

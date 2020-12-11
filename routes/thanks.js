@@ -13,7 +13,7 @@ router.get("/thanks", requireSignedPetition, (req, res) => {
         })
         .then(({ rows }) => {
             res.render("thanks", {
-                errorMessage: req.query.error,
+                err: req.query.error,
                 sig: rows[0].sig,
                 name: rows[0].first,
                 sigCount,

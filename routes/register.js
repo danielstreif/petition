@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/register", requireLoggedOutUser, (req, res) => {
     res.render("register", {
-        errorMessage: req.query.error,
+        err: req.query.error,
     });
 });
 

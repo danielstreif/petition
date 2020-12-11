@@ -5,7 +5,7 @@ const db = require("../db");
 const router = express.Router();
 
 router.get("/profile", (req, res) => {
-    res.render("profile", { errorMessage: req.query.error });
+    res.render("profile", { err: req.query.error });
 });
 
 router.post("/profile", (req, res) => {
@@ -33,7 +33,7 @@ router.get("/profile/edit", (req, res) => {
         .then(({ rows }) => {
             res.render("edit", {
                 userInfo: rows,
-                errorMessage: req.query.error,
+                err: req.query.error,
                 success: req.query.success,
             });
         })

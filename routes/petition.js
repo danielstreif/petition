@@ -5,7 +5,7 @@ const { requireUnsignedPetition } = require("../middleware");
 const router = express.Router();
 
 router.get("/petition", requireUnsignedPetition, (req, res) => {
-    res.render("petition", { errorMessage: req.query.error });
+    res.render("petition", { err: req.query.error });
 });
 
 router.post("/petition", requireUnsignedPetition, (req, res) => {

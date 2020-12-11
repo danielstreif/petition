@@ -2,6 +2,7 @@ exports.requireLoggedInUser = (req, res, next) => {
     if (
         !req.session.userId &&
         req.url !== "/register" &&
+        req.url !== "/register/?error=true" &&
         req.url !== "/login" &&
         req.url !== "/login/?error=true"
     ) {
