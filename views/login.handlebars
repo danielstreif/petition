@@ -1,12 +1,14 @@
-<h3>Please log in</h3>
+<div class="box">
+    <h3>Please log in</h3>
 
-{{> error}}
+    {{> error}}
 
-<form method="post">
-    <input type="email" name="email" placeholder="Email" required="required">
-    <input type="password" name="password" placeholder="Password" required="required">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button>LOG IN</button>
-</form>
+    <form method="post">
+        <input type="email" name="email" placeholder="Email" required="required">
+        <input type="password" name="password" placeholder="Password" required="required">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button>LOG IN</button>
+    </form>
 
-<p>Not registered yet? <a href="/register">Register now</a>.</p>
+    <p>Not registered yet? <a href="/register">Register now</a>.</p>
+</div>

@@ -13,7 +13,7 @@ process.env.NODE_ENV === "production"
     : (secrets = require("./secrets"));
 const { sessionSecret, maxAge } = secrets;
 
-app.engine("handlebars", hb());
+app.engine("handlebars", hb({ helpers: require("./helpers") }));
 app.set("view engine", "handlebars");
 
 app.use(express.static("./public"));

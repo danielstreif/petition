@@ -1,13 +1,15 @@
-<h3>Please provide some additional information</h3>
+<div class="box">
+    <h3>Please provide some additional information</h3>
 
-{{> error}}
+    {{> error}}
 
-<form method="post">
-    <input type="number" name="age" placeholder="Age">
-    <input type="text" name="city" placeholder="City">
-    <input type="url" name="homepage" placeholder="Homepage">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button>SUBMIT</button>
-</form>
+    <form method="post">
+        <input type="number" name="age" placeholder="Age">
+        <input type="text" name="city" placeholder="City">
+        <input type="url" name="homepage" placeholder="Homepage">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button>SUBMIT</button>
+    </form>
 
-{{> logout}}
+    {{> logout}}
+</div>

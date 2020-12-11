@@ -32,7 +32,7 @@ module.exports.getSignersByCity = (city) => {
         `SELECT users.first, users.last, user_profiles.age, user_profiles.url FROM users
     LEFT JOIN user_profiles ON users.id = user_profiles.user_id
     JOIN signatures ON users.id = signatures.user_id
-    WHERE TRIM(LOWER(city)) = LOWER($1)`,
+    WHERE LOWER(city) = LOWER($1)`,
         [city]
     );
 };
@@ -68,7 +68,7 @@ module.exports.getSigId = (userId) => {
 module.exports.addUserProfile = (paramArr) => {
     return db.query(
         `INSERT INTO user_profiles (age, city, url, user_id)
-    VALUES ($1, $2, $3, $4)`,
+    VALUES ($1, TRIM($2), $3, $4)`,
         paramArr
     );
 };
@@ -85,9 +85,9 @@ module.exports.getProfile = (userId) => {
 module.exports.upsertProfile = (paramArr) => {
     return db.query(
         `INSERT INTO user_profiles (user_id, age, city, url)
-VALUES ($1, $2, $3, $4)
+VALUES ($1, $2, TRIM($3), $4)
 ON CONFLICT (user_id)
-DO UPDATE SET age = $2, city = $3, url = $4`,
+DO UPDATE SET age = $2, city = TRIM($3), url = $4`,
         paramArr
     );
 };

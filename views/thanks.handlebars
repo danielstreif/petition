@@ -1,17 +1,19 @@
-<h3>Thanks, {{name}}, for signing!</h3>
+<div class="box">
+    <h3>Thanks, {{name}}, for signing!</h3>
 
-<img class="sig" src={{sig}} alt="signature">
+    <img class="sig" src={{sig}} alt="signature">
 
-{{> error}}
+    {{> error}}
 
-<a href="/signers">
-    <button id="signers">See all {{sigCount}} signers!</button>
-</a>
+    <a href="/signers">
+        <button id="signers">See all {{sigCount}} signers!</button>
+    </a>
 
-{{> logout}}
-{{> edit}}
+    {{> logout}}
+    {{> edit}}
 
-<form method="post">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button>DELETE SIGNATURE</button>
-</form>
+    <form method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button>DELETE SIGNATURE</button>
+    </form>
+</div>

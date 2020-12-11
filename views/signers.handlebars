@@ -1,24 +1,26 @@
-<h3>List of signers</h3>
+<div class="box">
+    <h3>List of signers</h3>
 
-<article>
-    {{#each signers}}
-        <p>
-        {{#if url}}
-            <a href={{url}}>{{first}} {{last}}</a>
-        {{else}}
-            {{first}} {{last}}
-        {{/if}}
-        {{age}} 
-        {{#if city}}
-            <a href="/signers/{{city}}">{{city}}</a>
-        {{/if}}
-        </p>
-    {{/each}}
-</article>
+    <article>
+        {{#each signers}}
+            <p>
+            {{#if url}}
+                <a href={{url}}>{{first}} {{last}}</a>
+            {{else}}
+                {{first}} {{last}}
+            {{/if}}
+            {{age}} 
+            {{#if city}}
+                <a href="/signers/{{lower city}}">{{city}}</a>
+            {{/if}}
+            </p>
+        {{/each}}
+    </article>
 
-{{> logout}}
-{{> edit}}
+    {{> logout}}
+    {{> edit}}
 
-{{#if city}}
-<a href="/signers"><button>BACK</button></a>
-{{/if}}
+    {{#if city}}
+    <a href="/signers"><button>BACK</button></a>
+    {{/if}}
+</div>

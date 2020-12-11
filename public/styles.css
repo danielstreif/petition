@@ -5,7 +5,8 @@
 }
 
 body {
-    background-color: lightgray;
+    background-image: url(./img/background.jpg);
+    background-size: cover;
 }
 
 main {
@@ -21,6 +22,20 @@ h3 {
     margin: 0 0 15px 0;
 }
 
+.box {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    border-radius: 10px;
+    background-color: rgba(250, 246, 246, 0.6);
+    width: 60%;
+    padding: 20px 0 20px 0;
+}
+
+.info {
+    padding: 10px; 
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -29,21 +44,28 @@ form {
 
 input {
     font-size: medium;
-    width: 200px;
+    border-radius: 4px;
+    width: 250px;
     height: 30px;
     margin: 10px 0 0 0;
 }
 
+input#terms {
+    width: auto;
+    height: auto;
+}
+
 button {
     font-size: medium;
-    width: 150px;
-    border-radius: 25px;
+    width: 200px;
     margin: 15px 0 10px 0;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 15px;
 }
 
 #canvas {
     border: solid black 1px;
-    background-color: white;
+    background-color: transparent;
     margin: 10px 0 10px 0;
 }
 

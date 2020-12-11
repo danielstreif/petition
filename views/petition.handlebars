@@ -1,19 +1,24 @@
-<h3>Please sign here</h3>
+<div class="box">
+    <h3>Please sign here</h3>
 
-{{> error}}
+    {{> error}}
 
-<form method="post">
-    <canvas id="canvas"  width="300px" height="100px"></canvas>
-    <input type="hidden" name="sig" id="sig">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button>SUBMIT</button>
-</form>
+    <div class="info">
+        <p>Recent studies have shown an average decrease of chocolate chips in chocolate chip cookies by 21.73% over the last 30 years. We therefore demand a global chocolate chip cookie chocolate minimum (CCCM) of 35.27 ounces per kilogram. Sign this petition today to help us. Together we will make chocolate chip cookies taste great again!</p>
+    </div>
 
-<a href="/petition"><button>CLEAR</button></a>
+    <form method="post">
+        <canvas id="canvas"  width="300px" height="100px"></canvas>
+        <input type="hidden" name="sig" id="sig">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button>SUBMIT</button>
+    </form>
 
-{{> edit}}
-{{> logout}}
+    <a href="/petition"><button>CLEAR</button></a>
 
+    {{> edit}}
+    {{> logout}}
+</div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="/canvas.js"></script>
