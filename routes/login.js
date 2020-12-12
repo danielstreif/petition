@@ -6,7 +6,7 @@ const { requireLoggedOutUser } = require("../middleware");
 const router = express.Router();
 
 router.get("/login", requireLoggedOutUser, (req, res) => {
-    res.render("login", { err: req.query.error });
+    res.render("login", { err: req.query.error, loggedOut: true });
 });
 
 router.post("/login", requireLoggedOutUser, (req, res) => {

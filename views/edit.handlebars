@@ -18,14 +18,25 @@
         <button>SAVE CHANGES</button>
     </form>
 
-    <form method="post">
-        <input type="hidden" name="deleteAcc" value="true">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <button>DELETE ACCOUNT</button>
-    </form>
 
-    {{> logout}}
+    <button id="delete">DELETE ACCOUNT</button>
 
     <a href="/petition"><button>BACK</button></a>
 
 </div>
+
+<div id="popup-overlay">
+    <div id="popup">
+        <h3>Confirmation</h3>
+        <p>Are you sure you want to delete your account?</p> 
+        <form method="post">
+            <input type="hidden" name="deleteAcc" value="true">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button class="button">YES</button>
+        </form>
+        <button class="button">NO</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="/delete.js"></script>

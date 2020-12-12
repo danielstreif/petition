@@ -2,6 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
+const homeRouter = require("./home");
 const loginRouter = require("./login");
 const logoutRouter = require("./logout");
 const petitionRouter = require("./petition");
@@ -10,6 +11,7 @@ const registerRouter = require("./register");
 const signersRouter = require("./signers");
 const thanksRouter = require("./thanks");
 
+router.use(homeRouter);
 router.use(loginRouter);
 router.use(logoutRouter);
 router.use(petitionRouter);

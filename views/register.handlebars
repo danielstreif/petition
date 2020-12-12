@@ -2,6 +2,7 @@
     <h3>Please register</h3>
 
     {{> error}}
+    {{> success}}
 
     <form method="post">
         <input type="text" name="first" placeholder="First Name" required="required">
@@ -9,8 +10,19 @@
         <input type="email" name="email" placeholder="Email Address" required="required">
         <input type="password" name="password" placeholder="Password" required="required">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <div><input type="checkbox" name="terms" id="terms" required="required"> I accept the <a href="">terms and conditions</a>.</div>
+        <div><input type="checkbox" name="terms" id="terms" required="required"> I accept the <a id="link" href="#">terms and conditions</a>.</div>
         <button>SIGN UP</button>
     </form>
     <p>Already have an account? <a href="/login">Sign in</a>.</p>
 </div>
+
+<div id="popup-overlay">
+    <div id="popup">
+        <h3>Welcome</h3>
+        <p>This site uses 🍪.</p> 
+        <p>Click anywhere on the page to continue.</p>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="/register.js"></script>

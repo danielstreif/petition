@@ -50,7 +50,7 @@ router.post("/profile/edit", (req, res) => {
         db.deleteUser(userId)
             .then(() => {
                 req.session = null;
-                res.redirect("/register");
+                res.redirect("/register/?success=true");
             })
             .catch((err) => {
                 res.redirect("/profile/edit/?error=true");

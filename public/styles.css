@@ -1,12 +1,35 @@
 * {
     box-sizing: border-box;
-    font-family: Georgia;
+    font-family: Verdana, Tahoma, sans-serif;
     margin: 0;
 }
 
 body {
+    position: relative;
     background-image: url(./img/background.jpg);
     background-size: cover;
+}
+
+header {
+    display: grid;
+    grid-template-columns: auto 110px 110px 110px;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 100vw;
+    overflow: hidden;
+    height: 5vh;
+    padding: 0 10px 0 10px;
+}
+
+header a {
+    color: black;
+    text-decoration: none;
+    padding: 10px;
+    font-weight: bold;
+}
+
+header a:hover {
+    color: rgb(53, 53, 53);
 }
 
 main {
@@ -14,26 +37,29 @@ main {
     flex-flow: column wrap;
     align-items: center;
     width: 100%;
-    height: 100vh;
-    padding: 150px 0 0 0;
+    height: 95vh;
+    padding: 100px 0 0 0;
 }
 
 h3 {
     margin: 0 0 15px 0;
+    padding: 0 10px 0 10px;
 }
 
 .box {
     display: flex;
     flex-flow: column wrap;
     align-items: center;
-    border-radius: 10px;
-    background-color: rgba(250, 246, 246, 0.6);
-    width: 60%;
-    padding: 20px 0 20px 0;
+    text-align: center;
+    border-radius: 15px;
+    background-color: rgba(250, 246, 246, 0.8);
+    width: 40%;
+    padding: 25px 10px 25px 10px;
+    box-shadow: 2px 3px rgba(0, 0, 0, 0.05);
 }
 
 .info {
-    padding: 10px; 
+    padding: 10px 20px 10px 20px;
 }
 
 form {
@@ -57,10 +83,15 @@ input#terms {
 
 button {
     font-size: medium;
-    width: 200px;
-    margin: 15px 0 10px 0;
+    width: auto;
+    margin: 20px 0 20px 0;
+    padding: 10px 20px 10px 20px;
     background-color: rgba(0, 0, 0, 0);
     border-radius: 15px;
+}
+
+button:hover {
+    font-weight: bold;
 }
 
 #canvas {
@@ -69,13 +100,18 @@ button {
     margin: 10px 0 10px 0;
 }
 
-#signers {
-    font-size: larger;
+img.sig {
+    width: 300px;
+    height: 100px;
+    margin: 10px 0 20px 0;
 }
 
-img.sig {
-    width: 250px;
-    height: 50px;
+#signers {
+    width: 80%;
+}
+
+article.signers {
+    padding: 10px 0 20px 0;
 }
 
 .errorMessage {
@@ -88,8 +124,56 @@ img.sig {
 
 footer {
     position: absolute;
+    display: flex;
+    align-items: flex-end;
     bottom: 0;
     width: 100%;
     height: 5vh;
     padding: 10px;
+}
+
+#popup-overlay {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    min-height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    visibility: hidden;
+}
+
+#popup {
+    z-index: 2;
+    position: fixed;
+    top: 40%;
+    transform: translateY(-50%);
+    background-color: whitesmoke;
+    width: 40%;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+@media screen and (max-width: 720px) {
+    header {
+    grid-template-columns: 110px 110px;
+    height: 15vh;
+}
+
+    main {
+        min-height: 90vh;
+        height: auto;
+        padding: 15px 0 100px 0;
+    }
+
+    .box {
+        width: 90%;
+    }
+
+    #popup {
+        width: 90%;
+    }
 }

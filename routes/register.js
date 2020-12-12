@@ -8,11 +8,16 @@ const router = express.Router();
 router.get("/register", requireLoggedOutUser, (req, res) => {
     res.render("register", {
         err: req.query.error,
+        success: req.query.success,
+        loggedOut: true,
     });
 });
 
 router.post("/register", requireLoggedOutUser, (req, res) => {
-    const { first, last, email, password } = req.body;
+    const { first, last, email, password, terms } = req.body;
+    if (!terms) {
+        return res.redirect("/register/?error=true");
+    }
     hash(password)
         .then((hash) => {
             return db.addUser(first, last, email, hash);

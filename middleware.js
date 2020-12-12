@@ -3,8 +3,10 @@ exports.requireLoggedInUser = (req, res, next) => {
         !req.session.userId &&
         req.url !== "/register" &&
         req.url !== "/register/?error=true" &&
+        req.url !== "/register/?success=true" &&
         req.url !== "/login" &&
-        req.url !== "/login/?error=true"
+        req.url !== "/login/?error=true" &&
+        req.url !== "/home"
     ) {
         return res.redirect("/register");
     }

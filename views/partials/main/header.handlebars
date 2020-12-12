@@ -1,0 +1,16 @@
+{{#if loggedOut}}
+    <header>
+        <a href="/home">HOME</a>
+        <div></div>
+        <a href="/login">SIGN IN</a>
+        <a href="/register">SIGN UP</a>
+    </header>
+{{else}}
+    <header>
+        <a href="/home">HOME</a> 
+        <a href="/petition">PETITION</a>
+        <a href="/profile/edit">PROFILE</a> 
+        <a href="/logout">LOGOUT</a> 
+    </header>
+    
+{{/if}}

@@ -1,7 +1,9 @@
 <div class="box">
     <h3>List of signers</h3>
 
-    <article>
+<p>Here is a list of all the amazing people who signed this petition. If available you can also see information about age, city and a linked homepage.</p>
+
+    <article class="signers">
         {{#each signers}}
             <p>
             {{#if url}}
@@ -17,10 +19,9 @@
         {{/each}}
     </article>
 
-    {{> logout}}
-    {{> edit}}
-
     {{#if city}}
     <a href="/signers"><button>BACK</button></a>
+    {{else}}
+    <a href="/petition"><button>BACK</button></a>
     {{/if}}
 </div>

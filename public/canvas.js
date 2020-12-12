@@ -19,8 +19,35 @@
         });
     });
 
+    canvas.on("touchstart", (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent("mousedown", {
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+        });
+        canvas[0].dispatchEvent(mouseEvent);
+
+        canvas.on("touchmove", (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousemove", {
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+            });
+            canvas[0].dispatchEvent(mouseEvent);
+        });
+
+        $(document).on("touchend", () => {
+            e.preventDefault();
+            const mouseEvent = new MouseEvent("mouseup", {});
+            $(document)[0].dispatchEvent(mouseEvent);
+        });
+    });
+
     function exit() {
         canvas.off("mousemove");
+        canvas.off("touchmove");
         const sigData = canvas[0].toDataURL();
         sig.val(sigData);
     }
