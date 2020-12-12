@@ -40,7 +40,7 @@ app.use(requireLoggedInUser);
 app.use(routes);
 
 app.get("*", (req, res) => {
-    res.redirect("/petition");
+    res.redirect("/home");
 });
 
 if (require.main === module) {

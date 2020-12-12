@@ -151,7 +151,7 @@ footer {
     top: 40%;
     transform: translateY(-50%);
     background-color: whitesmoke;
-    width: 40%;
+    max-width: 40%;
     border-radius: 15px;
     padding: 20px;
     text-align: center;

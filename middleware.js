@@ -8,7 +8,7 @@ exports.requireLoggedInUser = (req, res, next) => {
         req.url !== "/login/?error=true" &&
         req.url !== "/home"
     ) {
-        return res.redirect("/register");
+        return res.redirect("/home");
     }
     next();
 };
