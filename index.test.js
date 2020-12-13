@@ -5,12 +5,12 @@ const db = require("./db");
 
 jest.mock("./db");
 
-test("GET /petition sends 302 and redirects to /register when logged out", () => {
+test("GET /petition sends 302 and redirects to /home when logged out", () => {
     return supertest(app)
         .get("/petition")
         .then((res) => {
             expect(res.statusCode).toBe(302);
-            expect(res.headers.location).toBe("/register");
+            expect(res.headers.location).toBe("/home");
         });
 });
 test("GET /register sends 302 and redirects to /petition when logged in", () => {
