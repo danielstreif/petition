@@ -15,13 +15,13 @@
         <input type="url" name="homepage", placeholder="Homepage", value={{url}}>
         {{/userInfo}}
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <button>SAVE CHANGES</button>
+        <button>Save changes</button>
     </form>
 
 
-    <button id="delete">DELETE ACCOUNT</button>
+    <button id="delete">Delete Account</button>
 
-    <a href="/petition"><button>BACK</button></a>
+    <a href="/petition"><button>Back</button></a>
 
 </div>
 
@@ -32,9 +32,9 @@
         <form method="post">
             <input type="hidden" name="deleteAcc" value="true">
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
-            <button class="button">YES</button>
+            <button class="button">Yes</button>
         </form>
-        <button class="button">NO</button>
+        <button class="button">No</button>
     </div>
 </div>
 

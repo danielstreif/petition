@@ -1,29 +1,37 @@
 * {
     box-sizing: border-box;
     font-family: Verdana, Tahoma, sans-serif;
+    line-height: 1.5rem;
     margin: 0;
 }
 
 body {
     position: relative;
+    min-height: 100vh;
     background-image: url(./img/background.jpg);
     background-size: cover;
+    background-attachment: fixed;
 }
 
 header {
     display: grid;
     grid-template-columns: auto 110px 110px 110px;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.3);
     width: 100vw;
     overflow: hidden;
-    height: 5vh;
     padding: 0 10px 0 10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 header a {
     color: black;
-    text-decoration: none;
     padding: 10px;
     font-weight: bold;
 }
@@ -37,13 +45,13 @@ main {
     flex-flow: column wrap;
     align-items: center;
     width: 100%;
-    height: 95vh;
     padding: 100px 0 0 0;
 }
 
 h3 {
     margin: 0 0 15px 0;
     padding: 0 10px 0 10px;
+    font-size: larger;
 }
 
 .box {
@@ -51,15 +59,21 @@ h3 {
     flex-flow: column wrap;
     align-items: center;
     text-align: center;
-    border-radius: 15px;
+    border-radius: 10px;
     background-color: rgba(250, 246, 246, 0.8);
-    width: 40%;
+    width: 30%;
+    min-width: 350px;
     padding: 25px 10px 25px 10px;
-    box-shadow: 2px 3px rgba(0, 0, 0, 0.05);
+    margin-bottom: 100px;
 }
 
 .info {
     padding: 10px 20px 10px 20px;
+}
+
+.home-text {
+    margin-bottom: 2rem;
+    margin-top: 0.5rem;
 }
 
 form {
@@ -74,6 +88,7 @@ input {
     width: 250px;
     height: 30px;
     margin: 10px 0 0 0;
+    border-style: solid;
 }
 
 input#terms {
@@ -84,10 +99,12 @@ input#terms {
 button {
     font-size: medium;
     width: auto;
-    margin: 20px 0 20px 0;
+    margin: 20px 0 0 0;
     padding: 10px 20px 10px 20px;
     background-color: rgba(0, 0, 0, 0);
-    border-radius: 15px;
+    border-radius: 10px;
+    line-height: 1rem;
+    border-style: solid;
 }
 
 button:hover {
@@ -128,7 +145,6 @@ footer {
     align-items: flex-end;
     bottom: 0;
     width: 100%;
-    height: 5vh;
     padding: 10px;
 }
 
@@ -159,9 +175,10 @@ footer {
 
 @media screen and (max-width: 720px) {
     header {
-    grid-template-columns: 110px 110px;
-    height: 15vh;
-}
+        grid-template-columns: 110px 110px;
+        background-color: rgba(0, 0, 0, 0.3);
+        height: 15vh;
+    }
 
     main {
         min-height: 90vh;
@@ -171,11 +188,11 @@ footer {
 
     .box {
         width: 90%;
-        max-width: 90%;
+        max-width: 400px;
     }
 
     #popup {
         width: 90%;
-        max-width: 90%;
+        max-width: 400px;
     }
 }

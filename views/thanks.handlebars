@@ -9,7 +9,7 @@
 
     {{> error}}
 
-    <button id="delete">DELETE YOUR SIGNATURE</button>
+    <button id="delete">Delete your signature</button>
 </div>
 
 <div id="popup-overlay">
@@ -18,9 +18,9 @@
         <p>Are you sure you want to revoke your signature?</p> 
         <form method="post">
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
-            <button class="button">YES</button>
+            <button class="button">Yes</button>
         </form>
-        <button class="button">NO</button>
+        <button class="button">No</button>
     </div>
 </div>
 
