@@ -171,9 +171,11 @@ footer {
 
     .box {
         width: 90%;
+        max-width: 90%;
     }
 
     #popup {
         width: 90%;
+        max-width: 90%;
     }
 }
