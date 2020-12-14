@@ -62,9 +62,11 @@ h3 {
     border-radius: 10px;
     background-color: rgba(250, 246, 246, 0.8);
     width: 30%;
-    min-width: 350px;
+    min-width: 370px;
     padding: 25px 10px 25px 10px;
     margin-bottom: 100px;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 .info {
@@ -73,6 +75,11 @@ h3 {
 
 .home-text {
     margin-bottom: 2rem;
+    margin-top: 0.5rem;
+}
+
+.signers-text {
+    margin-bottom: 1.5rem;
     margin-top: 0.5rem;
 }
 
@@ -177,18 +184,19 @@ footer {
     }
 
     main {
-        min-height: 90vh;
-        height: auto;
         padding: 15px 0 100px 0;
     }
 
     .box {
         width: 90%;
-        max-width: 400px;
+        max-width: 370px;
+        min-width: auto;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     #popup {
         width: 90%;
-        max-width: 400px;
+        max-width: 370px;
     }
 }

@@ -13,6 +13,9 @@ router.post("/profile", (req, res) => {
     if (!homepage.startsWith("http") || !homepage.startsWith("https")) {
         homepage = null;
     }
+    if (age < 0 || age > 120) {
+        age = null;
+    }
     const params = [
         age || null,
         city || null,
@@ -44,8 +47,8 @@ router.get("/profile/edit", (req, res) => {
 
 router.post("/profile/edit", (req, res) => {
     const userId = req.session.userId;
-    const { first, last, email, password, age, city, deleteAcc } = req.body;
-    let { homepage } = req.body;
+    const { first, last, email, password, city, deleteAcc } = req.body;
+    let { homepage, age } = req.body;
     if (deleteAcc) {
         db.deleteUser(userId)
             .then(() => {
@@ -66,6 +69,9 @@ router.post("/profile/edit", (req, res) => {
                     !homepage.startsWith("https")
                 ) {
                     homepage = null;
+                }
+                if (age < 0 || age > 120) {
+                    age = null;
                 }
                 const params = [
                     userId,
@@ -89,6 +95,9 @@ router.post("/profile/edit", (req, res) => {
                     !homepage.startsWith("https")
                 ) {
                     homepage = null;
+                }
+                if (age < 0 || age > 120) {
+                    age = null;
                 }
                 const params = [
                     userId,
