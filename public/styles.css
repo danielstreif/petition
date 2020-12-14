@@ -135,10 +135,6 @@ article.signers {
     color: red;
 }
 
-.successMessage {
-    color: green;
-}
-
 footer {
     position: absolute;
     display: flex;
